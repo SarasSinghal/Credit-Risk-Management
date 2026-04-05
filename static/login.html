@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — Loan Predictor</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0f0e0b;
+    --ink-2: #3a3830;
+    --ink-3: #7a7870;
+    --paper: #faf9f6;
+    --paper-2: #f2f0eb;
+    --border: #dedad2;
+    --accent: #b5860d;
+    --accent-light: #fdf3dc;
+    --red: #c0392b;
+    --green: #27500a;
+    --green-bg: #eaf3de;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* Left panel */
+  .panel-left {
+    width: 44%;
+    background: var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .panel-left::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    border: 1px solid rgba(181,134,13,0.2);
+  }
+  .panel-left::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    border: 1px solid rgba(181,134,13,0.12);
+  }
+
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px; color: #fff;
+  }
+  .brand-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .panel-copy { position: relative; z-index: 1; }
+  .panel-copy h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 38px; font-weight: 400;
+    color: #fff; line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  .panel-copy p { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.7; max-width: 260px; }
+
+  .stat-row { display: flex; gap: 2rem; }
+  .stat-item { }
+  .stat-num { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--accent); }
+  .stat-lbl { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; letter-spacing: 0.04em; }
+
+  /* Right panel */
+  .panel-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+  }
+
+  .form-box { width: 100%; max-width: 380px; }
+
+  .form-header { margin-bottom: 2rem; }
+  .form-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px; font-weight: 400;
+    color: var(--ink); margin-bottom: 6px;
+  }
+  .form-header p { font-size: 14px; color: var(--ink-3); }
+  .form-header a { color: var(--accent); text-decoration: none; font-weight: 500; }
+  .form-header a:hover { text-decoration: underline; }
+
+  .field { margin-bottom: 1.1rem; }
+  label {
+    display: block;
+    font-size: 12px; font-weight: 500;
+    color: var(--ink-2); margin-bottom: 6px;
+    letter-spacing: 0.03em;
+  }
+  input[type="email"], input[type="password"], input[type="text"] {
+    width: 100%; height: 44px; padding: 0 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--paper-2);
+    color: var(--ink);
+    font-size: 14px; font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  }
+  input:focus {
+    border-color: var(--accent);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(181,134,13,0.1);
+  }
+
+  .btn {
+    width: 100%; height: 46px;
+    background: var(--ink); color: #fff;
+    border: none; border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 500;
+    cursor: pointer; margin-top: 0.5rem;
+    transition: opacity 0.15s, transform 0.1s;
+    letter-spacing: 0.02em;
+  }
+  .btn:hover { opacity: 0.85; }
+  .btn:active { transform: scale(0.99); }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .error-msg {
+    background: #fdf0ef; border: 1px solid #f5b8b4;
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 13px; color: var(--red);
+    margin-bottom: 1rem; display: none;
+  }
+  .success-msg {
+    background: var(--green-bg); border: 1px solid #97c459;
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 13px; color: var(--green);
+    margin-bottom: 1rem; display: none;
+  }
+
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 1.25rem 0; color: var(--ink-3); font-size: 12px;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  .spinner {
+    display: inline-block; width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white; border-radius: 50%;
+    animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 640px) {
+    .panel-left { display: none; }
+    .panel-right { padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="panel-left">
+  <div class="brand"><div class="brand-dot"></div> LoanPredict</div>
+  <div class="panel-copy">
+    <h2>Smart credit decisions, instantly.</h2>
+    <p>Our XGBoost model analyses 11 financial signals to predict loan outcomes with over 93% accuracy.</p>
+  </div>
+  <div class="stat-row">
+    <div class="stat-item">
+      <div class="stat-num">93.7%</div>
+      <div class="stat-lbl">Model accuracy</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">32k+</div>
+      <div class="stat-lbl">Records trained</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">11</div>
+      <div class="stat-lbl">Risk features</div>
+    </div>
+  </div>
+</div>
+
+<div class="panel-right">
+  <div class="form-box">
+    <div class="form-header">
+      <h1>Welcome back</h1>
+      <p>Don't have an account? <a href="/signup">Sign up free</a></p>
+    </div>
+
+    <div class="error-msg" id="errMsg"></div>
+    <div class="success-msg" id="sucMsg"></div>
+
+    <div class="field">
+      <label for="email">Email address</label>
+      <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <button class="btn" id="loginBtn" onclick="doLogin()">Sign in</button>
+
+    <div class="divider">or</div>
+    <p style="text-align:center; font-size:13px; color:var(--ink-3);">
+      New here? <a href="/signup" style="color:var(--accent); font-weight:500; text-decoration:none;">Create an account →</a>
+    </p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+  async function doLogin() {
+    const email = document.getElementById('email').value.trim();
+    const pw    = document.getElementById('password').value;
+    const btn   = document.getElementById('loginBtn');
+    const err   = document.getElementById('errMsg');
+    const suc   = document.getElementById('sucMsg');
+
+    err.style.display = 'none';
+    suc.style.display = 'none';
+
+    if (!email || !pw) { showErr('Please enter your email and password.'); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Signing in…';
+
+    try {
+      const res  = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: pw })
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        suc.textContent = `Welcome back, ${data.name}! Redirecting…`;
+        suc.style.display = 'block';
+        setTimeout(() => window.location.href = '/', 800);
+      } else {
+        showErr(data.error || 'Login failed.');
+        btn.disabled = false;
+        btn.textContent = 'Sign in';
+      }
+    } catch {
+      showErr('Cannot reach server. Is Flask running?');
+      btn.disabled = false;
+      btn.textContent = 'Sign in';
+    }
+  }
+
+  function showErr(msg) {
+    const el = document.getElementById('errMsg');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+</script>
+</body>
+</html>
