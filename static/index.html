@@ -234,9 +234,9 @@
 <div class="app">
 
   <div class="header">
-    <div class="logo"><span class="logo-dot"></span> XGBoost · 93.72% accuracy</div>
+    <!-- <div class="logo"><span class="logo-dot"></span> XGBoost · 93.72% accuracy</div> -->
     <h1>Loan Approval Predictor</h1>
-    <p class="tagline">Powered by a real trained credit risk model</p>
+   
   </div>
 
   <!-- Personal Info -->
@@ -297,8 +297,8 @@
         <input type="number" id="int_rate" placeholder="e.g. 11.5" step="0.01" min="0" max="100">
       </div>
       <div class="field" style="grid-column: span 2;">
-        <label>Loan as % of income <span style="font-size:11px;color:var(--text-hint)">(auto-calculated)</span></label>
-        <input type="text" id="pct_income_display" readonly placeholder="Fill salary + loan amount above" style="background:var(--bg);color:var(--text-muted);cursor:default;">
+        <!-- <label>Loan as % of income <span style="font-size:11px;color:var(--text-hint)">(auto-calculated)</span></label>
+        <input type="text" id="pct_income_display" readonly placeholder="Fill salary + loan amount above" style="background:var(--bg);color:var(--text-muted);cursor:default;"> -->
         <input type="hidden" id="pct_income">
       </div>
     </div>
@@ -374,15 +374,11 @@ loadUser();
 function calcPct() {
   const income = parseFloat(document.getElementById('income').value);
   const loan   = parseFloat(document.getElementById('loan_amnt').value);
-  const display = document.getElementById('pct_income_display');
-  const hidden  = document.getElementById('pct_income');
+  const hidden = document.getElementById('pct_income');
   if (income > 0 && loan > 0) {
-    const pct = (loan / income).toFixed(4);
-    hidden.value = pct;
-    display.value = (loan / income * 100).toFixed(1) + '% of annual income';
+    hidden.value = (loan / income).toFixed(4);
   } else {
     hidden.value = '';
-    display.value = '';
   }
 }
 
