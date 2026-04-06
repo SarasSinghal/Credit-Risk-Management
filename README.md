@@ -1,4 +1,4 @@
-# Loan Approval Predictor
+# Credit Approval Predictor
 
 A web application that predicts loan approval using a trained XGBoost model (93.72% accuracy) on the credit risk dataset.
 - **Algorithm**: XGBoost Classifier
